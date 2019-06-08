@@ -9,6 +9,10 @@ module.exports = (env, argv) => {
   const dev = mode == 'development'
   return {
     mode: mode,
+    devServer: {
+      port: 3001,
+      historyApiFallback: true
+    },
     entry: {
       app: ['./src/main.js']
     },
@@ -64,7 +68,7 @@ module.exports = (env, argv) => {
       })
     ],
     resolve: {
-      extensions: ['.js', '.svelte', '.html'],
+      extensions: [ '.mjs', '.js', '.svelte', '.html'],
       alias: {
         '@': path.resolve(__dirname, 'src')
       }
