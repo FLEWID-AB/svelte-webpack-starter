@@ -39,9 +39,9 @@
       if (!selected) {
         return
       }
-      let comp = selected.route.component()
-      if (typeof comp.then == 'function') {
-        asyncComponent = comp
+      
+      if (selected.route.asyncComponent) {
+        asyncComponent = selected.route.asyncComponent()
         asyncComponent.then(
           ({default: component}) => {
             return new component({
@@ -50,7 +50,7 @@
           }
         )
       } else {
-        currentComponent = comp
+        currentComponent = selected.route.component
       }
     })
   })
@@ -67,6 +67,6 @@
     {/await}
     <div bind:this="{target}" ></div>
   {:else if currentComponent}
-    <svelte:component this="{currentComponent}" />
+     <svelte:component this="{currentComponent}"></svelte:component>
   {/if}
 {/if}

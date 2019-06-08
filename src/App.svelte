@@ -1,15 +1,16 @@
 <script>
   import Router from './Router'
+  import Home from './views/Home.svelte'
   export let name
 
   let routes = [
     {
       path: '/',
-      component: () => import(/* webpackChunkName: "home" */ './views/Home.svelte')
+      component: Home
     },
     {
       path: '/about',
-      component: () => import(/* webpackChunkName: "about" */ './views/About.svelte')
+      asyncComponent: () => import(/* webpackChunkName: "about" */ './views/About.svelte')
     }
   ]
 </script>
