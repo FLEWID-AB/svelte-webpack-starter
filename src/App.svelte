@@ -2,7 +2,6 @@
   import Router from './Router'
   import Home from './views/Home.svelte'
   import page from 'page'
-  export let name
 
   let routes = [
     {
@@ -29,7 +28,7 @@
 
 </script>
 
-<h1>Hello {name}!</h1>
+<h1>Welcome Svelte!</h1>
 <a href="/">Home</a>
 <a href="/about">About</a>
 <a href="/dynamic/foo">Dynamic (foo)</a>

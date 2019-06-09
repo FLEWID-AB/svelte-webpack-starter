@@ -1,1 +1,5 @@
-<h1>Home</h1>
+<script>
+  import Hello from '@/components/Hello'
+</script>
+
+<Hello name="World!" />
