@@ -1,23 +1,47 @@
 <script context="module">
-  export const SvelteRouter = {}
+  export let currentRoute
 </script>
 
 <script>
   import { setContext, getContext, onMount } from 'svelte'
   import { writable } from 'svelte/store'
-
   import page from 'page'
+  page.base('')
+
+  // Keeps track of the new route
+  let routeStore = writable(null)
+
   export let routes
 
-  let currentRoute = writable(null)
+  /**
+   * Set a custom Middleware function that is run before each route
+   * If you change the context, ensure to call ctx.save() before calling next()
+   * Also ensure that you have to call next() as the final function 
+   */
+  export let middlewares = []
+
+  const setMetadata = (route) => (ctx, next) => {
+    let metadata = route.metadata || {}
+    ctx.metadata = metadata
+    ctx.save()
+    next()
+  }
+
+  const setRoute = (route) => (ctx, next) => {
+    routeStore.set({ctx, route})
+    next()
+  }
 
   const registerRoute = (route) => {
+    if (route.middleware) {
+      // we have a custom route based middleware, so let's add it after the default
+      middlewares.push(route.middleware)
+    }
     page(
       route.path,
-      (ctx, next) => {
-        currentRoute.set({ctx, route})
-        next()
-      }
+      setMetadata(route),
+      ...middlewares,
+      setRoute(route)
     )
   }
 
@@ -25,28 +49,22 @@
     registerRoute(route)
   })
 
-  setContext(SvelteRouter, {
-    currentRoute
-  })
-
   let currentComponent
   let asyncComponent
-  let target
 
   onMount(() => {
-    page({hashbang: false})
-    currentRoute.subscribe(selected => {
+    page()
+    routeStore.subscribe(selected => {
       if (!selected) {
         return
       }
-      
+      currentRoute = selected.ctx
       if (selected.route.asyncComponent) {
         asyncComponent = selected.route.asyncComponent()
         asyncComponent.then(
           ({default: component}) => {
-            return new component({
-              target
-            })
+            currentComponent = component
+            return component
           }
         )
       } else {
@@ -65,8 +83,8 @@
     {:catch error}
       <p>Something went wrong: {error.message}</p>
     {/await}
-    <div bind:this="{target}" ></div>
-  {:else if currentComponent}
-     <svelte:component this="{currentComponent}"></svelte:component>
+  {/if}
+  {#if currentComponent}
+    <svelte:component this="{currentComponent}"></svelte:component>
   {/if}
 {/if}

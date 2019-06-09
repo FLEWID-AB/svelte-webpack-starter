@@ -19,7 +19,8 @@ module.exports = (env, argv) => {
     output: {
       path: __dirname + '/dist',
       filename: '[name]'.js,
-      chunkFilename: '[name].[id].js'
+      chunkFilename: '[name].[id].js',
+      publicPath: '/'
     },
     module: {    
       rules: [
