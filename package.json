@@ -36,6 +36,7 @@
     "svelte": "^3.4.4",
     "svelte-loader": "^2.13.4",
     "webpack": "^4.33.0",
+    "webpack-babel-multi-target-plugin": "^2.3.0-alpha.1",
     "webpack-cli": "^3.3.3",
     "webpack-dev-server": "^3.7.1"
   }
