@@ -77,8 +77,7 @@ module.exports = (env, argv) => {
     plugins: [
       new CleanWebpackPlugin(),
       new BabelMultiTargetPlugin(),
-      new NamedLazyChunksPlugin(), 
-         
+      new NamedLazyChunksPlugin(),
       new HtmlWebpackPlugin({
         inject: true,
         template: path.resolve('./public/index.html'),
