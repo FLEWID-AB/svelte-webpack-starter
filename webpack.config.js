@@ -1,10 +1,13 @@
 const path = require('path')
-const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const BabelMultiTargetPlugin = require('webpack-babel-multi-target-plugin').BabelMultiTargetPlugin
 const NamedLazyChunksPlugin =  require('webpack-babel-multi-target-plugin').NamedLazyChunksPlugin
+const WebpackPwaManifest = require('webpack-pwa-manifest')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+
+// Register Workbox service worker
+const WorkboxPlugin = require('workbox-webpack-plugin')
 
 module.exports = (env, argv) => {
   const mode = argv.mode
@@ -19,7 +22,9 @@ module.exports = (env, argv) => {
       app: ['./src/main.js']
     },
     output: {
-      publicPath: '/'
+      publicPath: '/',
+      path: path.join(__dirname, 'dist'),
+      filename: dev ? '[name].js' : '[name].[chunkhash].js'
     },
     module: {    
       rules: [
@@ -55,21 +60,55 @@ module.exports = (env, argv) => {
               loader: 'sass-loader'
             }
           ]
+        },
+        {
+          test: /\.(png|svg|jpg|gif)$/,
+          use: [
+            {
+              loader: 'file-loader',
+              options: {
+                name: dev ? 'images/[name].[ext]' : 'images/[name][hash].[ext]'
+              }
+            }
+          ]
         }
       ]    
     },
     plugins: [
-      new webpack.ProgressPlugin(),
-      new BabelMultiTargetPlugin(),
-      new NamedLazyChunksPlugin(),
       new CleanWebpackPlugin(),
+      new BabelMultiTargetPlugin(),
+      new NamedLazyChunksPlugin(), 
+         
       new HtmlWebpackPlugin({
         inject: true,
-        template: path.resolve('./public/index.html')
+        template: path.resolve('./public/index.html'),
+        favicon: path.resolve('./public/favicon.ico'),
+        meta: {
+          'theme-color': '#fc401d'
+        }
       }),
+      new WebpackPwaManifest({
+        name: 'Svelte Starter',
+        description: 'Starter Package for Svelte applications',
+        background_color: '#ffffff',
+        start_url: '/',
+        theme_color: '#fc401d',
+        inject: true,
+        icons: [
+          {
+            src: path.resolve('./src/assets/images/icon.png'),
+            sizes: [96, 128, 192, 256, 384, 512]
+          }
+        ]
+      }),  
       new MiniCssExtractPlugin({
         filename: '[name].css',
         chunkFilename: '[id].css'
+      }),
+      
+      new WorkboxPlugin.GenerateSW({
+        clientsClaim: true,
+        skipWaiting: true
       })
     ],
     resolve: {

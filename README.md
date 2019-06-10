@@ -5,6 +5,7 @@ Includes
 * SASS (SCSS)
 * Webpack 4
 * Routing
+* PWA including Service Worker and App Manifest
 
 ## Getting started
 
@@ -33,3 +34,7 @@ yarn build:production
 
 Configure your routes in App.svelte, or create a custom routes.js file and include it as a property to the `<Router>` Component.
 This package uses [page](https://github.com/visionmedia/page.js) for routing.
+
+## App Manifest
+
+Change the values in webpack.config.js to match your own icons and Application name

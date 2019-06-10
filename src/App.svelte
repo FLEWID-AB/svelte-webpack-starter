@@ -10,14 +10,14 @@
     },
     {
       path: '/about',
-      asyncComponent: () => import(/* webpackChunkName: "about" */ './views/About.svelte'),
+      asyncComponent: () => import(/* webpackChunkName: "about", webpackPrefetch: true */ './views/About.svelte'),
       metadata: {
         key: 'value'
       }
     },
     {
       path: '/dynamic/:slug',
-      asyncComponent: () => import(/* webpackChunkName: "dynamic" */ './views/DynamicRoute.svelte'),
+      asyncComponent: () => import(/* webpackChunkName: "dynamic", webpackPrefetch: true  */ './views/DynamicRoute.svelte'),
       middleware: (ctx, next) => {
         ctx.state.slug = ctx.params.slug
         ctx.save()
