@@ -2,6 +2,7 @@
   import Router from './Router'
   import Home from './views/Home.svelte'
   import page from 'page'
+  import '@/assets/scss/app.scss'
 
   let routes = [
     {

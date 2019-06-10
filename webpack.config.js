@@ -97,7 +97,8 @@ module.exports = (env, argv) => {
         icons: [
           {
             src: path.resolve('./src/assets/images/icon.png'),
-            sizes: [96, 128, 192, 256, 384, 512]
+            sizes: [96, 128, 192, 256, 384, 512],
+            destination: 'icons'
           }
         ]
       }),  
